@@ -1,7 +1,7 @@
 # Hyper Metroid Item Randomizer
 # Downloads: [Hyper Metroid Item Randomizer v1.00](https://github.com/Galamoz/HyperMetroidRandomizer/releases/download/1.00/Hyper.Metroid.Item.Randomizer.v1.00.exe)
 
-
+###### Important technique to know for Hyper Metroid randomizers is: Angle Down (L by default) + Down while midair to instant morphball.
 
 ----------------------------------------------  
 
