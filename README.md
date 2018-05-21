@@ -33,5 +33,5 @@ v 1.0
     Fixed a softlock involving Bomb Torizo and Power Bombs.
     Ceres has been removed.
     Grey Doors at X-Ray and Charge Beam rooms have been adjusted.
-    Item in Tourian can be obtained before the Mother Brain.
+    Item in Tourian can only be obtained before the Mother Brain.
     
