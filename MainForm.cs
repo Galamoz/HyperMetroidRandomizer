@@ -40,7 +40,10 @@ namespace SuperMetroidRandomizer
             Settings.Default.ControlsItemCancel = Settings.Default.ControlsItemCancel;
             Settings.Default.ControlsAngleUp = Settings.Default.ControlsAngleUp;
             Settings.Default.ControlsAngleDown = Settings.Default.ControlsAngleDown;
+            Settings.Default.ControlsMoonwalk = Settings.Default.ControlsMoonwalk;
+            Settings.Default.ControlsIconCancel = Settings.Default.ControlsIconCancel;
             Settings.Default.RandomizerDifficulty = Settings.Default.RandomizerDifficulty;
+            Settings.Default.RandoDiff06 = Settings.Default.RandoDiff06;
             Settings.Default.CreateSpoilerLog = Settings.Default.CreateSpoilerLog;
         }
 
@@ -59,7 +62,7 @@ namespace SuperMetroidRandomizer
         {
             filenameV11.Text = Settings.Default.OutputFileV11;
             createSpoilerLog.Checked = Settings.Default.CreateSpoilerLog;
-            Text = string.Format("Hyper Metroid Item Randomizer v1.0", RandomizerVersion.CurrentDisplay);
+            Text = string.Format("Hyper Metroid Item Randomizer: v1.00", RandomizerVersion.CurrentDisplay);
             randomizerDifficulty.SelectedItem = Settings.Default.RandomizerDifficulty;
             RunCheckUpdate();
         }

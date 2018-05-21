@@ -129,9 +129,9 @@
         	this.randomizerDifficulty.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
         	this.randomizerDifficulty.FormattingEnabled = true;
         	this.randomizerDifficulty.Items.AddRange(new object[] {
-			"Casual",
-			"Speedrunner",
-			"Masochist"});
+        	                                         	"Casual"});
+			//"Speedrunner",
+			//"Masochist"});
         	this.randomizerDifficulty.Location = new System.Drawing.Point(64, 6);
         	this.randomizerDifficulty.Name = "randomizerDifficulty";
         	this.randomizerDifficulty.Size = new System.Drawing.Size(121, 21);
@@ -223,7 +223,7 @@
         	this.filenameV11.Name = "filenameV11";
         	this.filenameV11.Size = new System.Drawing.Size(483, 20);
         	this.filenameV11.TabIndex = 14;
-        	this.filenameV11.Text = "Hyper Rando <seed>.sfc";
+        	this.filenameV11.Text = "Hyper Metroid Rando <seed>.sfc";
         	this.filenameV11.TextChanged += new System.EventHandler(this.filenameV11_TextChanged);
         	this.filenameV11.Leave += new System.EventHandler(this.filename_Leave);
         	// 
@@ -234,7 +234,7 @@
         	this.ClientSize = new System.Drawing.Size(532, 374);
         	this.Controls.Add(this.tabControl1);
         	this.Name = "MainForm";
-        	this.Text = "Hyper Metroid Item Randomizer v1.0";
+        	this.Text = "Hyper Metroid Item Randomizer";
         	this.Load += new System.EventHandler(this.MainForm_Load);
         	this.tabControl1.ResumeLayout(false);
         	this.tabPage1.ResumeLayout(false);
