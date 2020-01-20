@@ -14,30 +14,15 @@ namespace SuperMetroidRandomizer.Rom
     public class RomLocationsSpeedrunner : IRomLocations
     {
         public List<Location> Locations { get; set; }
-        public string DifficultyName { get { return "Speedrunner"; } }
+        public string DifficultyName { get { return "Veteran"; } }
         public string SeedFileString { get { return "V{0:0000000}"; } }
-        public string SeedRomString { get { return "SMRv{0} V{1}"; } }
+       public string SeedRomString { get { return "SMRv{0} C{1}"; } }
 
         public void ResetLocations()
         {
            Locations = new List<Location>
                        {
-           	//define difficulty: casual
-           	//all 100 items
-           	//walljumping should be the minimum requirement for player skill 
-           	//space jump is ok, speedbooster may be difficult for newer players
-           	//no hellruns and no suitless maridia, small suitless for WS
-           	//ice beam may be used to get to higher areas
-           	//ibj not required
-           	//charge beam and plasma beam are outside of difficult areas like LN
-           	
-           	//define difficulty: veteran
-           	//all 100 items
-           	//many advanced tricks may be required from project base runners such as shinespark, backflip, etc
-           	//suitless hellruns and gravity hellruns will be possible which will required extra fine tuning for both possibilities
-           	//suitless maridia will be possible as far as it goes
-           	//however suitless will not be forced into LN
-           	//more ibj will be used, but not in a masochistic way
+
 					    new Location
                                {
                                    NoHidden = true,
@@ -45,10 +30,11 @@ namespace SuperMetroidRandomizer.Rom
                                    Region = Region.Crateria,
                                    Name = "Backflip Tutorial",
                                    Address = 0x79060,
-                                   //index = 01,
                                    CanAccess =
                                        have =>
                                    	true,
+                                   //can enforce morphball or high jump
+                                   //can be accessed with just walljumps
                                },
 							    new Location
                                {
@@ -60,11 +46,11 @@ namespace SuperMetroidRandomizer.Rom
                                    ItemStorageType = ItemStorageType.Chozo,
                                    CanAccess =
                                        have =>
+									// CanIBJ(have)
+									// || 
 									(CanEnterPassages(have)
-                                   	 && (have.Contains(ItemType.SpaceJump)
-                                   	     || have.Contains(ItemType.SpeedBooster)))
+                                   	 && CanIBJ(have))
                                    	|| CanSpringBallJump(have),
-									// || have.Contains(ItemType.SpeedBooster)),
                                },
 							    new Location
                                {
@@ -75,7 +61,8 @@ namespace SuperMetroidRandomizer.Rom
                                    Address = 0x78124,
                                    CanAccess =
                                        have =>
-                                   	have.Contains(ItemType.SpeedBooster),
+										have.Count(x => x == ItemType.Missile) >= 10
+									&& have.Contains(ItemType.SpeedBooster),
                                },
                             new Location
                                {
@@ -87,10 +74,7 @@ namespace SuperMetroidRandomizer.Rom
                                    Address = 0x7903A,
                                    CanAccess =
                                        have =>
-									 CanIBJ(have)
-									 || CanSpringBallJump(have)
-									|| have.Contains(ItemType.HiJumpBoots)
-                                   	 || have.Contains(ItemType.SpeedBooster)
+									CanSpringBallJump(have)
 									 || have.Contains(ItemType.IceBeam),
                                },
 							    new Location
@@ -102,8 +86,11 @@ namespace SuperMetroidRandomizer.Rom
                                    Address = 0x79046,
                                    CanAccess =
                                        have =>
-									 CanEnterPassages(have)
-                                   || CanSpeedBall(have),
+                                   	// (CanOpenMissileDoors(have)
+                                   	// || have.Contains(ItemType.MorphingBall))
+									 CanEnterPassages(have),
+                                   // CanSpeedBall(have)   
+									// ||
                                },
 							    new Location
                                {
@@ -113,7 +100,6 @@ namespace SuperMetroidRandomizer.Rom
                                    //Name = "Early Missiles",
                                    Name = "WallJump Missiles",
                                    Address = 0x7904C,
-                                   //index = 0c,
                                    CanAccess =
                                        have =>
 									true,
@@ -124,7 +110,6 @@ namespace SuperMetroidRandomizer.Rom
                                    GravityOkay = false,  
                                    Region = Region.Crateria,
                                    Name = "Morphing Ball",
-                                   //index = 0E, 
                                    Address = 0x7816A,
                                    CanAccess =
                                        have =>
@@ -162,10 +147,8 @@ namespace SuperMetroidRandomizer.Rom
                                    Address = 0x7907C,
                                    CanAccess =
                                        have =>
-									 CanIBJ(have)
-                                   	&& CanOpenMissileDoors(have)
-									&& CanOpenPassages(have),
-									// && CanSpringBallJump(have),
+									CanIBJ(have)
+                                   	&& CanOpenMissileDoors(have),
                                },
 							    new Location
                                {
@@ -177,6 +160,7 @@ namespace SuperMetroidRandomizer.Rom
                                    CanAccess =
                                        have =>
 									CanUsePowerBombs(have)
+									&& have.Count(x => x == ItemType.Missile) >= 10
 									// && (CanSpringBallJump(have)
 									// || CanIBJ(have))
 									
@@ -199,7 +183,8 @@ namespace SuperMetroidRandomizer.Rom
                                    Address = 0x782C4,
                                    CanAccess =
                                        have =>
-									CanSpeedBall(have),
+									CanSpeedBall(have)
+									&& have.Count(x => x == ItemType.Missile) >= 10,
                                },
                             new Location
                                {
@@ -225,6 +210,7 @@ namespace SuperMetroidRandomizer.Rom
                                    CanAccess =
                                        have =>
                                    	true,
+                                   
 									//CanOpenMissileDoors(have),
 									// have.Contains(ItemType.MorphingBall),
                                    	// nothing is required with morph ball level edits
@@ -245,8 +231,8 @@ namespace SuperMetroidRandomizer.Rom
 									
 									// || 
                                    	have.Contains(ItemType.MorphingBall)
-                                   	&& (have.Contains(ItemType.ScrewAttack)
-                                   	|| have.Contains(ItemType.SpeedBooster)),
+                                   	&& CanIBJ(have),
+                                   	   // || have.Contains(ItemType.SpeedBooster)),
                                },
 							    new Location
                                {
@@ -273,8 +259,10 @@ namespace SuperMetroidRandomizer.Rom
                                        have =>
 									// CanIBJ(have)
 									// || 
-									have.Contains(ItemType.HiJumpBoots)
-                                   	|| have.Contains(ItemType.SpeedBooster),
+                                   	
+									have.Count(x => x == ItemType.Missile) >= 10
+									&& have.Contains(ItemType.HiJumpBoots),
+                                   	// || CanIBJ(have)), thats too sadistic
                                },
 							    // 17 Crateria items
                            new Location
@@ -332,9 +320,9 @@ namespace SuperMetroidRandomizer.Rom
                                    GravityOkay = false,  
                                    Region = Region.WreckedShip,
                                    // Name = "Dead Spike Missile",
-                                   Name = "WS Middle",
+                                   Name = "WS Middle/Dead Spike Missile",
                                    Address = 0x78A02,
-                                   ItemStorageType = ItemStorageType.Hidden,
+                                   //ItemStorageType = ItemStorageType.Hidden,
                                    CanAccess =
                                        have =>
 									CanEnterWS(have),
@@ -361,16 +349,12 @@ namespace SuperMetroidRandomizer.Rom
                                    CanAccess =
                                        have =>
 									CanEnterWS(have)
-                                   	
-									&& ((have.Contains(ItemType.GrappleBeam)
-                                   	     && have.Contains(ItemType.HiJumpBoots))
-                                   	     || have.Contains(ItemType.SpaceJump))
+                                   	         && CanIBJ(have),
                                    	     
-									|| (have.Contains(ItemType.SuperMissile)
-                                   	         && CanIBJ(have)
-                                   	  && ((have.Contains(ItemType.GrappleBeam)
-                                   	     && have.Contains(ItemType.HiJumpBoots))
-                                   	     || have.Contains(ItemType.SpaceJump))),
+								//	|| (have.Contains(ItemType.SuperMissile)
+                                //   	  && ((have.Contains(ItemType.GrappleBeam)
+                                //   	     && have.Contains(ItemType.HiJumpBoots))
+                                //   	     || have.Contains(ItemType.SpaceJump))),
                                    //ibj shouldn't be too difficult for most people
                                },
 							   new Location
@@ -398,8 +382,7 @@ namespace SuperMetroidRandomizer.Rom
                                        have =>
 									CanEnterInnerWS(have)
 									&& have.Contains(ItemType.GravitySuit)
-									&& (have.Contains(ItemType.SpeedBooster)
-									|| have.Contains(ItemType.SpaceJump)),
+                                   	&& CanIBJ(have),
                                },
 							   new Location
                                {
@@ -414,12 +397,7 @@ namespace SuperMetroidRandomizer.Rom
                                        have =>
 									(CanEnterInnerWS(have)
                                    	 && CanUsePowerBombs(have))
-									
-									&& (((have.Contains(ItemType.GravitySuit)
-                                   	     && CanIBJ(have))
-									
-									|| (have.Contains(ItemType.HiJumpBoots)
-                                   	         && have.Contains(ItemType.SpringBall)))),
+                                   	&& have.Contains(ItemType.HiJumpBoots),
                                },
                           new Location
                                {
@@ -434,12 +412,7 @@ namespace SuperMetroidRandomizer.Rom
                                        have =>
 									(CanEnterInnerWS(have)
                                    	 && CanUsePowerBombs(have))
-									
-									&& (((have.Contains(ItemType.GravitySuit)
-                                   	     && CanIBJ(have))
-									
-									|| (have.Contains(ItemType.HiJumpBoots)
-                                   	         && have.Contains(ItemType.SpringBall)))),
+                                   	&& have.Contains(ItemType.HiJumpBoots),
                                },
                           // 11 WS Items
 							   new Location
@@ -503,16 +476,10 @@ namespace SuperMetroidRandomizer.Rom
                                    CanAccess =
                                        have =>
 									CanAccessUpperBrinstar(have)
-									&& (have.Contains(ItemType.GravitySuit)
-									|| have.Contains(ItemType.HiJumpBoots))
+									&& have.Contains(ItemType.HiJumpBoots)
 									
 									&& (CanEnterPassages(have)
-									|| have.Contains(ItemType.WaveBeam))
-									
-									&& (have.Contains(ItemType.IceBeam)
-									|| have.Contains(ItemType.HiJumpBoots)),
-                                   
-                                   // should recheck for more sound logic
+									|| have.Contains(ItemType.WaveBeam)),
                                },	
 							   new Location
                                {
@@ -527,7 +494,7 @@ namespace SuperMetroidRandomizer.Rom
 									
 									&& (CanUsePowerBombs(have)
                                    	    //grapple beam limit for kago lake
-									|| have.Contains(ItemType.GrappleBeam)),
+									&& have.Contains(ItemType.GrappleBeam)),
                                },	
 							   new Location
                                {
@@ -591,8 +558,7 @@ namespace SuperMetroidRandomizer.Rom
                                    CanAccess =
                                        have =>
 									CanEnterBrinstarMiddle(have)
-									&& have.Contains(ItemType.SpaceJump)
-									// CanIBJ(have),
+									&& CanIBJ(have)
 									// limit
 									&& have.Contains(ItemType.GrappleBeam),
                                },	
@@ -606,7 +572,8 @@ namespace SuperMetroidRandomizer.Rom
                                    CanAccess =
                                        have =>
 									CanAccessUpperBrinstar(have)
-									&& have.Contains(ItemType.GravitySuit),
+									&& have.Contains(ItemType.SpaceJump)
+                                   	&& have.Contains(ItemType.HiJumpBoots),
                                    //obtainable using space jump, semi precise
                                },	
 							   new Location
@@ -620,10 +587,8 @@ namespace SuperMetroidRandomizer.Rom
                                    CanAccess =
                                        have =>
 									CanEnterBrinstarMiddle(have)
-									&& have.Contains(ItemType.SpaceJump)
-									// CanIBJ(have),
+									&& CanIBJ(have),
 									// limit
-									&& have.Contains(ItemType.GrappleBeam),
                                },	
 							   new Location
                                {
@@ -646,9 +611,8 @@ namespace SuperMetroidRandomizer.Rom
                                    Address = 0x78470,
                                    CanAccess =
                                        have =>
-									CanEnterBrinstarMiddle(have)
+									CanEnterBrinstarMiddle(have),
 									// limit for new players
-									&& have.Contains(ItemType.GrappleBeam),
                                },	
 							   new Location
                                {
@@ -712,6 +676,7 @@ namespace SuperMetroidRandomizer.Rom
                                    CanAccess =
                                        have =>
 									CanAccessUpperBrinstar(have)
+                                   	&& have.Contains(ItemType.ChargeBeam)
 									&& (have.Contains(ItemType.IceBeam)
 									|| have.Contains(ItemType.HiJumpBoots)),
                                },	
@@ -722,12 +687,10 @@ namespace SuperMetroidRandomizer.Rom
                                    Region = Region.Brinstar,
                                    Name = "Frog E-Tank",
                                    Address = 0x78ABC,
-                                   //ItemStorageType = ItemStorageType.Hidden,
+                                   ItemStorageType = ItemStorageType.Hidden,
                                    CanAccess =
                                        have =>
-									have.Contains(ItemType.HiJumpBoots)
-                                   	|| have.Contains(ItemType.SpaceJump),
-									// || CanIBJ(have),
+                                   	CanIBJ(have),
                                },	
 							   new Location
                                {
@@ -741,8 +704,7 @@ namespace SuperMetroidRandomizer.Rom
                                        have =>
 									AccessFrogPath(have)
 									
-									&& (have.Contains(ItemType.GrappleBeam)
-									|| have.Contains(ItemType.SpaceJump)),
+                                   	&& have.Contains(ItemType.GrappleBeam),
                                },	
 							   new Location
                                {
@@ -757,12 +719,8 @@ namespace SuperMetroidRandomizer.Rom
                                    // both items should be randomized now via patch
                                    CanAccess =
                                        have =>
-									CanEnterBrinstarMiddle(have)
-									// limit
-									&& (have.Contains(ItemType.GrappleBeam)
-									|| have.Contains(ItemType.SpaceJump)
-									|| have.Contains(ItemType.SpeedBooster)),
-									
+									CanEnterBrinstarMiddle(have),
+									// player may need to use speedrunner technique to obtain item
 									// room has been adjusted for grey doors to open upon 2 kills.
                                },	
 							   // 23 brinstar items
@@ -777,7 +735,11 @@ namespace SuperMetroidRandomizer.Rom
                                    ItemStorageType = ItemStorageType.Chozo,
                                    CanAccess =
                                        have =>
-									CanAccessNorfair(have),
+                                   	have.Contains(ItemType.MorphingBall)
+                                   	&& have.Contains(ItemType.SuperMissile)
+									&& have.Count(x => x == ItemType.EnergyTank) >= 4,
+                                   	// hellrun, no hj takes less than 3 etanks if done well
+									//CanAccessNorfair(have),
                                },			
                            new Location
                                {
@@ -788,17 +750,8 @@ namespace SuperMetroidRandomizer.Rom
                                    Address = 0x78572,
                                    CanAccess =
                                        have =>
-                                   	CanSpringBallJump(have)
-									   //or mockball
-                                   	&& CanAccessNorfair(have)
-                                   	
-									&& (have.Contains(ItemType.GrappleBeam)
-									|| have.Contains(ItemType.SpaceJump)),
-									// 3 routes
-									//&& (CanAccessIceBeamPath(have)
-                                   	//    || CanAccessNorfair(have)),
-									// || CanEnterRightNorfair(have)),
-									// removal for not being necessary
+                                   	CanAccessNorfair(have)
+									&& have.Contains(ItemType.GrappleBeam),
                                },	
 							   new Location
                                {
@@ -839,8 +792,9 @@ namespace SuperMetroidRandomizer.Rom
                                    Address = 0x78FA8,
                                    CanAccess =
                                        have =>
+                                   	// 5 etanks + gravity is good enough for many item checks
                                    	CanAccessNorfair(have)
-									&& have.Count(x => x == ItemType.EnergyTank) >= 2,
+									// && have.Count(x => x == ItemType.EnergyTank) >= 3,
 									// (CanAccessIceBeamPath(have)
 									// || CanAccessNorfair(have)),
 									// || CanEnterRightNorfair(have)),
@@ -856,10 +810,8 @@ namespace SuperMetroidRandomizer.Rom
                                    CanAccess =
                                        have =>
 									CanAccessNorfair(have)
-                                   	&& have.Contains(ItemType.MorphingBall)
 									&& have.Contains(ItemType.SuperMissile)
-									// && CanIBJ(have)
-									&& have.Contains(ItemType.SpaceJump),
+									&& CanIBJ(have),
                                },	
 							   new Location
                                {
@@ -898,8 +850,7 @@ namespace SuperMetroidRandomizer.Rom
 									CanAccessNorfair(have)
                                    	&& have.Contains(ItemType.MorphingBall)
 									&& have.Contains(ItemType.SuperMissile)
-									// && CanIBJ(have)
-									&& have.Contains(ItemType.SpaceJump),
+									&& CanIBJ(have),
                                    	
 									   //2 routes - Crocomire (Mid Norfair) or Maridia Tube
 									// (CanAccessMiddleNorfair(have)
@@ -1058,8 +1009,8 @@ namespace SuperMetroidRandomizer.Rom
                                    	&& have.Contains(ItemType.SuperMissile)
                                    	// grapple for casual
                                    	&& have.Contains(ItemType.GrappleBeam)
-									&& (have.Contains(ItemType.SpaceJump)
-									 || have.Contains(ItemType.SpeedBooster)),
+                                   	&& (CanIBJ(have)
+                                   	&& have.Contains(ItemType.IceBeam)),
                                    //difficult to obtain with only ice beam
                                },	
 							   new Location
@@ -1074,9 +1025,7 @@ namespace SuperMetroidRandomizer.Rom
 									CanAccessMiddleNorfair(have)
                                    	&& have.Contains(ItemType.GrappleBeam)
                                    	&& have.Contains(ItemType.SuperMissile)
-									// && CanIBJ(have)
-									&& (have.Contains(ItemType.SpaceJump)
-									|| have.Contains(ItemType.SpeedBooster)),
+									&& CanIBJ(have),
                                },	
 							   new Location
                                {
@@ -1092,8 +1041,6 @@ namespace SuperMetroidRandomizer.Rom
                                    	//enter from grey-crocomire door
                                    	&& CanUsePowerBombs(have)
 									&& have.Contains(ItemType.SuperMissile),
-									// CanAccessMiddleNorfair(have)
-									// && CanUsePowerBombs(have),
                                },		
 							   new Location
                                {
@@ -1117,6 +1064,7 @@ namespace SuperMetroidRandomizer.Rom
                                    CanAccess =
                                        have =>
 									CanAccessLN(have)
+                                   	&& have.Contains(ItemType.ChargeBeam)
 									&& CanEnterPassages(have),
 									//fixed room to prevent softlocks
                                },		
@@ -1182,7 +1130,8 @@ namespace SuperMetroidRandomizer.Rom
                                    CanAccess =
                                        have =>
 									CanAccessLN(have)
-									&& CanUsePowerBombs(have),
+									&& CanUsePowerBombs(have)
+                                   	&& have.Contains(ItemType.IceBeam),
 									//ice beam + backflip crumbles, hj is also possible
                                },				
 							   // 27 norfair+LN items
@@ -1200,8 +1149,9 @@ namespace SuperMetroidRandomizer.Rom
                                    	//&& (have.Contains(ItemType.HiJumpBoots))
 									// || have.Contains(ItemType.GravitySuit))
 									
-                                   	&& (CanSpringBallJump(have)
-									&& have.Contains(ItemType.IceBeam)),
+                                   	&& ((CanSpringBallJump(have)
+									&& have.Contains(ItemType.IceBeam))
+                                   		|| have.Contains(ItemType.HiJumpBoots)),
                                },			
 							   new Location
                                {
@@ -1213,12 +1163,9 @@ namespace SuperMetroidRandomizer.Rom
                                    CanAccess =
                                        have =>
 									(CanEnterMaridia(have)
-									|| BackdoorMaridia(have))
-									
-									// && have.Contains(ItemType.GravitySuit)
-									&& (have.Contains(ItemType.HiJumpBoots)
-									|| have.Contains(ItemType.SpaceJump)
-									|| have.Contains(ItemType.SpeedBooster)),
+                               	 		&& have.Contains(ItemType.HiJumpBoots))
+									|| (BackdoorMaridia(have)
+										&& have.Contains(ItemType.HiJumpBoots)),
                                },			
 							   new Location
                                {
@@ -1258,9 +1205,8 @@ namespace SuperMetroidRandomizer.Rom
                                    Address = 0x78828,
                                    CanAccess =
                                        have =>
-									(CanEnterMaridia(have)
-									|| BackdoorMaridia(have))
-									
+									CanEnterMaridia(have)
+                                   	&& have.Count(x => x == ItemType.Missile) >= 10
 									&& (have.Contains(ItemType.GravitySuit)
 									&& have.Contains(ItemType.SpeedBooster)),
                                },		
@@ -1386,8 +1332,7 @@ namespace SuperMetroidRandomizer.Rom
                                        have =>
 									MaridiaRuins(have)
 									&& CanSpringBallJump(have)
-									&& CanUsePowerBombs(have)
-									&& (have.Contains(ItemType.SpaceJump)),
+									&& CanUsePowerBombs(have),
                                },			
 							   new Location
                                {
@@ -1399,7 +1344,8 @@ namespace SuperMetroidRandomizer.Rom
                                    CanAccess =
                                        have =>
 									CanEnterMaridiaDepths(have)
-									&& CanUsePowerBombs(have),
+									&& CanUsePowerBombs(have)
+                                   	&& have.Contains(ItemType.SpringBall),
                                },			
 							   new Location
                                {
@@ -1428,7 +1374,7 @@ namespace SuperMetroidRandomizer.Rom
 									&& have.Contains(ItemType.GravitySuit)
                                    	&& CanSpringBallJump(have)
 									// masochistic ibj instead of springball
-									&& have.Count(x => x == ItemType.EnergyTank) >= 5,
+									&& have.Count(x => x == ItemType.EnergyTank) >= 6,
                                    //springball/varia is highly recommended to reduce damage taken
                                },		
                           new Location
@@ -1498,8 +1444,7 @@ namespace SuperMetroidRandomizer.Rom
                                        have =>
                                    	CanEnterMaridiaDepths(have)
                                    	&& CanAccessLN(have)
-                                   	&& CanAccessUpperBrinstar(have)
-                                   	// && have.Contains(ItemType.IceBeam),
+                                   	&& CanAccessUpperBrinstar(have),
                                    //not locking out ice beam for casuals
                                },	
                        };
@@ -1561,8 +1506,7 @@ private static bool CanEnterWS(List<ItemType> have)
 				// && (CanIBJ(have)
 				// || have.Contains(ItemType.ScrewAttack)
 				// || 
-				&& (have.Contains(ItemType.HiJumpBoots)
-				|| have.Contains(ItemType.SpaceJump));
+				&& have.Contains(ItemType.HiJumpBoots);
 				// || have.Contains(ItemType.SpeedBooster));
 				// || have.Contains(ItemType.GravitySuit)
 				// gravity could make it too easy...
@@ -1572,9 +1516,8 @@ private static bool CanEnterWS(List<ItemType> have)
 
 			return CanEnterWS(have)
 				//casual charge beam limit
-				&& have.Contains(ItemType.ChargeBeam)
 			&& have.Contains(ItemType.SuperMissile)
-				&& have.Contains(ItemType.GravitySuit);
+				&& have.Contains(ItemType.HiJumpBoots);
 			// || CanIBJ(have))
 		} 			
 		
@@ -1597,8 +1540,7 @@ private static bool CanEnterWS(List<ItemType> have)
         {
 
 			return CanEnterPassages(have)
-				&& have.Contains(ItemType.HiJumpBoots);
-			// || CanIBJ(have)
+				&& CanIBJ(have);
 		} 						
  private static bool CanAccessIceBeamPath(List<ItemType> have)
         {
@@ -1612,9 +1554,14 @@ private static bool CanEnterWS(List<ItemType> have)
  private static bool CanAccessNorfair(List<ItemType> have)
         {
 
-			return have.Contains(ItemType.VariaSuit)
-			// && have.Contains(ItemType.MorphingBall)
-				&& CanOpenMissileDoors(have);
+			return (have.Contains(ItemType.GravitySuit)
+			&& have.Count(x => x == ItemType.EnergyTank) >= 4
+			&& CanOpenMissileDoors(have));
+				
+ 		//|| (have.Contains(ItemType.VariaSuit)
+		//	&& have.Count(x => x == ItemType.Missile) >= 10
+		//	&& have.Contains(ItemType.MorphingBall)
+		//	&& CanOpenMissileDoors(have));
 		} 								
  private static bool CanEnterRightNorfair(List<ItemType> have)
         {
@@ -1624,9 +1571,7 @@ private static bool CanEnterWS(List<ItemType> have)
 			
 			&& (have.Contains(ItemType.HiJumpBoots)
 			// CanIBJ(have)
-			&& (have.Contains(ItemType.GrappleBeam))
-
-			|| have.Contains(ItemType.SpaceJump));
+			&& (have.Contains(ItemType.GrappleBeam)));
 			//Can get to the same spot with just varia suit
 			//useless code
 		} 						
@@ -1635,8 +1580,7 @@ private static bool CanEnterWS(List<ItemType> have)
 
 			return CanAccessNorfair(have)
 			&& (have.Contains(ItemType.IceBeam)
-			|| have.Contains(ItemType.HiJumpBoots)
-			|| have.Contains(ItemType.SpaceJump));
+				    || have.Contains(ItemType.HiJumpBoots));
 		} 							
  private static bool CanAccessMaridiaTube(List<ItemType> have)
         {
@@ -1656,6 +1600,8 @@ private static bool CanEnterWS(List<ItemType> have)
 			return CanAccessMiddleNorfair(have)
 				//casual charge beam limit
 				&& have.Contains(ItemType.MorphingBall)
+				
+				&& have.Contains(ItemType.VariaSuit)
 			// && CanAccessMaridiaTube
 			// not sure if add maridia items
 				&& have.Contains(ItemType.SpringBall)
@@ -1666,24 +1612,22 @@ private static bool CanEnterWS(List<ItemType> have)
         {
 
 			return CanOpenMissileDoors(have)
-			&& have.Contains(ItemType.SpringBall)
 			// or mockball
-				&& CanEnterPassages(have)
-				&& have.Contains(ItemType.GravitySuit);
+				&& CanEnterPassages(have);
 			// turn on gravity for casual
 		} 									
  private static bool BackdoorMaridia(List<ItemType> have)
         {
 
- 	return CanUsePowerBombs(have)
- 		&& have.Contains(ItemType.GravitySuit);
+ 	return CanUsePowerBombs(have);
 		} 										
  private static bool CanEnterThirteenthStreet(List<ItemType> have)
         {
 
 			return CanEnterMaridia(have)
 			// && have.Contains(ItemType.SpringBall)
-			&& have.Contains(ItemType.Missile)
+				&& CanOpenMissileDoors(have)
+			&& have.Contains(ItemType.SpringBall)
 			&& have.Contains(ItemType.HiJumpBoots)
 			// might have to rethink the logic
 				&& BossArea(have);
@@ -1693,13 +1637,10 @@ private static bool CanEnterWS(List<ItemType> have)
 			//Maridia Route
 			return (CanEnterMaridia(have)
 			&& CanUsePowerBombs(have)
-			&& (have.Contains(ItemType.HiJumpBoots)))
+			&& have.Contains(ItemType.SpringBall)
+			&& (have.Contains(ItemType.HiJumpBoots)));
 			// && have.Contains(ItemType.GravitySuit)))
 			//can have || gravity for harder difficulties
-			
-			//WS Route
-			|| (CanEnterInnerWS(have)
-				    && CanEnterPassages(have));
 		} 										
  private static bool CanEnterMaridiaDepths(List<ItemType> have)
         {
@@ -1710,6 +1651,7 @@ private static bool CanEnterWS(List<ItemType> have)
 			
 			|| (CanEnterMaridia(have)
 			&& CanUsePowerBombs(have)
+			&& have.Contains(ItemType.SpringBall)
 			&& (have.Contains(ItemType.HiJumpBoots)));
 			    //&& have.Contains(ItemType.GravitySuit)));
 			//can have || gravity for harder difficulties
@@ -1727,7 +1669,7 @@ private static bool BossArea(List<ItemType> have)
 	//balance for casuals in deeper areas like LN. Use this to push items to easier areas of the game.
 	return have.Contains(ItemType.ChargeBeam)
 		&& have.Contains(ItemType.PlasmaBeam)
-			&& have.Count(x => x == ItemType.EnergyTank) >= 4;
+			&& have.Count(x => x == ItemType.EnergyTank) >= 2;
 			
 		}   
 
@@ -1751,7 +1693,7 @@ private static bool BossArea(List<ItemType> have)
             var retVal = (from Location location in Locations where (location.Item == null) && location.CanAccess(haveItems) select location).ToList();
             var currentWeight = (from item in retVal orderby item.Weight descending select item.Weight).First() + 1;
 
-            foreach (var item in retVal.Where(item => item.Weight == 0))
+            foreach (var item in retVal.Where(item => item.Weight == 100))
             {
                 item.Weight = currentWeight;
             }

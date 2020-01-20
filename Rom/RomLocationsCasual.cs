@@ -22,22 +22,7 @@ namespace SuperMetroidRandomizer.Rom
         {
            Locations = new List<Location>
                        {
-           	//define difficulty: casual
-           	//all 100 items
-           	//walljumping should be the minimum requirement for player skill 
-           	//space jump is ok, speedbooster may be difficult for newer players
-           	//no hellruns and no suitless maridia, small suitless for WS
-           	//ice beam may be used to get to higher areas
-           	//ibj not required
-           	//charge beam and plasma beam are outside of difficult areas like LN
-           	
-           	//define difficulty: veteran
-           	//all 100 items
-           	//many advanced tricks may be required from project base runners such as shinespark, backflip, etc
-           	//suitless hellruns and gravity hellruns will be possible which will required extra fine tuning for both possibilities
-           	//suitless maridia will be possible as far as it goes
-           	//however suitless will not be forced into LN
-           	//more ibj will be used, but not in a masochistic way
+
 					    new Location
                                {
                                    NoHidden = true,
@@ -45,7 +30,6 @@ namespace SuperMetroidRandomizer.Rom
                                    Region = Region.Crateria,
                                    Name = "Backflip Tutorial",
                                    Address = 0x79060,
-                                   //index = 01,
                                    CanAccess =
                                        have =>
                                    	have.Contains(ItemType.MorphingBall),
@@ -124,7 +108,6 @@ namespace SuperMetroidRandomizer.Rom
                                    //Name = "Early Missiles",
                                    Name = "WallJump Missiles",
                                    Address = 0x7904C,
-                                   //index = 0c,
                                    CanAccess =
                                        have =>
 									true,
@@ -135,7 +118,6 @@ namespace SuperMetroidRandomizer.Rom
                                    GravityOkay = false,  
                                    Region = Region.Crateria,
                                    Name = "Morphing Ball",
-                                   //index = 0E, 
                                    Address = 0x7816A,
                                    CanAccess =
                                        have =>
@@ -345,9 +327,9 @@ namespace SuperMetroidRandomizer.Rom
                                    GravityOkay = false,  
                                    Region = Region.WreckedShip,
                                    // Name = "Dead Spike Missile",
-                                   Name = "WS Middle",
+                                   Name = "WS Middle/Dead Spike Missile",
                                    Address = 0x78A02,
-                                   ItemStorageType = ItemStorageType.Hidden,
+                                   //ItemStorageType = ItemStorageType.Hidden,
                                    CanAccess =
                                        have =>
 									CanEnterWS(have),
@@ -374,16 +356,16 @@ namespace SuperMetroidRandomizer.Rom
                                    CanAccess =
                                        have =>
 									CanEnterWS(have)
+                                   	         && CanIBJ(have)
                                    	
 									&& ((have.Contains(ItemType.GrappleBeam)
                                    	     && have.Contains(ItemType.HiJumpBoots))
-                                   	     || have.Contains(ItemType.SpaceJump))
+                                   	     || have.Contains(ItemType.SpaceJump)),
                                    	     
-									|| (have.Contains(ItemType.SuperMissile)
-                                   	         && CanIBJ(have)
-                                   	  && ((have.Contains(ItemType.GrappleBeam)
-                                   	     && have.Contains(ItemType.HiJumpBoots))
-                                   	     || have.Contains(ItemType.SpaceJump))),
+								//	|| (have.Contains(ItemType.SuperMissile)
+                                //   	  && ((have.Contains(ItemType.GrappleBeam)
+                                //   	     && have.Contains(ItemType.HiJumpBoots))
+                                //   	     || have.Contains(ItemType.SpaceJump))),
                                    //ibj shouldn't be too difficult for most people
                                },
 							   new Location
@@ -411,8 +393,8 @@ namespace SuperMetroidRandomizer.Rom
                                        have =>
 									CanEnterInnerWS(have)
 									&& have.Contains(ItemType.GravitySuit)
-									&& (have.Contains(ItemType.SpeedBooster)
-									|| have.Contains(ItemType.SpaceJump)),
+									// && (have.Contains(ItemType.SpeedBooster)
+									&& have.Contains(ItemType.SpaceJump),
                                },
 							   new Location
                                {
@@ -540,7 +522,7 @@ namespace SuperMetroidRandomizer.Rom
 									
 									&& (CanUsePowerBombs(have)
                                    	    //grapple beam limit for kago lake
-									|| have.Contains(ItemType.GrappleBeam)),
+									&& have.Contains(ItemType.GrappleBeam)),
                                },	
 							   new Location
                                {
@@ -725,6 +707,7 @@ namespace SuperMetroidRandomizer.Rom
                                    CanAccess =
                                        have =>
 									CanAccessUpperBrinstar(have)
+                                   	&& have.Contains(ItemType.ChargeBeam)
 									&& (have.Contains(ItemType.IceBeam)
 									|| have.Contains(ItemType.HiJumpBoots)),
                                },	
@@ -738,8 +721,9 @@ namespace SuperMetroidRandomizer.Rom
                                    //ItemStorageType = ItemStorageType.Hidden,
                                    CanAccess =
                                        have =>
-									have.Contains(ItemType.HiJumpBoots)
-                                   	|| have.Contains(ItemType.SpaceJump),
+                                   	have.Contains(ItemType.MorphingBall)
+									&& (have.Contains(ItemType.HiJumpBoots)
+                                   	    || have.Contains(ItemType.SpaceJump)),
 									// || CanIBJ(have),
                                },	
 							   new Location
@@ -853,7 +837,7 @@ namespace SuperMetroidRandomizer.Rom
                                    CanAccess =
                                        have =>
                                    	CanAccessNorfair(have)
-									&& have.Count(x => x == ItemType.EnergyTank) >= 2,
+									&& have.Count(x => x == ItemType.EnergyTank) >= 3,
 									// (CanAccessIceBeamPath(have)
 									// || CanAccessNorfair(have)),
 									// || CanEnterRightNorfair(have)),
@@ -1130,6 +1114,7 @@ namespace SuperMetroidRandomizer.Rom
                                    CanAccess =
                                        have =>
 									CanAccessLN(have)
+                                   	&& have.Contains(ItemType.ChargeBeam)
 									&& CanEnterPassages(have),
 									//fixed room to prevent softlocks
                                },		
@@ -1441,7 +1426,7 @@ namespace SuperMetroidRandomizer.Rom
 									&& have.Contains(ItemType.GravitySuit)
                                    	&& CanSpringBallJump(have)
 									// masochistic ibj instead of springball
-									&& have.Count(x => x == ItemType.EnergyTank) >= 5,
+									&& have.Count(x => x == ItemType.EnergyTank) >= 6,
                                    //springball/varia is highly recommended to reduce damage taken
                                },		
                           new Location
@@ -1510,6 +1495,7 @@ namespace SuperMetroidRandomizer.Rom
                                    CanAccess =
                                        have =>
                                    	CanEnterMaridiaDepths(have)
+			&& have.Count(x => x == ItemType.EnergyTank) >= 9
                                    	&& CanAccessLN(have)
                                    	&& CanAccessUpperBrinstar(have)
                                    	&& have.Contains(ItemType.IceBeam),
@@ -1571,6 +1557,7 @@ private static bool CanEnterWS(List<ItemType> have)
         {
 
 			return have.Contains(ItemType.MorphingBall)
+				&& have.Count(x => x == ItemType.EnergyTank) >= 2
 				// && (CanIBJ(have)
 				// || have.Contains(ItemType.ScrewAttack)
 				// || 
@@ -1626,7 +1613,8 @@ private static bool CanEnterWS(List<ItemType> have)
         {
 
 			return have.Contains(ItemType.VariaSuit)
-			// && have.Contains(ItemType.MorphingBall)
+				&& have.Count(x => x == ItemType.EnergyTank) >= 2
+			&& have.Contains(ItemType.MorphingBall)
 				&& CanOpenMissileDoors(have);
 		} 								
  private static bool CanEnterRightNorfair(List<ItemType> have)
@@ -1655,6 +1643,7 @@ private static bool CanEnterWS(List<ItemType> have)
         {
 
 			return have.Contains(ItemType.VariaSuit)
+				&& have.Count(x => x == ItemType.EnergyTank) >= 2
 			&& have.Contains(ItemType.GravitySuit)
 			&& have.Contains(ItemType.SuperMissile)
 			&& have.Contains(ItemType.HiJumpBoots)
@@ -1679,6 +1668,7 @@ private static bool CanEnterWS(List<ItemType> have)
         {
 
 			return CanOpenMissileDoors(have)
+				&& have.Count(x => x == ItemType.EnergyTank) >= 2
 			&& have.Contains(ItemType.SpringBall)
 			// or mockball
 				&& CanEnterPassages(have)
@@ -1764,7 +1754,7 @@ private static bool BossArea(List<ItemType> have)
             var retVal = (from Location location in Locations where (location.Item == null) && location.CanAccess(haveItems) select location).ToList();
             var currentWeight = (from item in retVal orderby item.Weight descending select item.Weight).First() + 1;
 
-            foreach (var item in retVal.Where(item => item.Weight == 0))
+            foreach (var item in retVal.Where(item => item.Weight == 100))
             {
                 item.Weight = currentWeight;
             }
