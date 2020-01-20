@@ -1,5 +1,5 @@
 # Hyper Metroid Item Randomizer
-# Downloads: [Hyper Metroid Item Randomizer v1.00](https://github.com/Galamoz/HyperMetroidRandomizer/releases/download/1.00/Hyper.Metroid.Item.Randomizer.v1.00.exe)
+# Downloads: [Hyper Metroid Item Randomizer v1.10](https://github.com/Galamoz/HyperMetroidRandomizer/releases/download/1.10/Hyper.Metroid.Item.Randomizer.v1.10.exe)
 
 #### Hyper Metroid Randomizer Resources
 ##### Full game map reference with item names: https://i.imgur.com/ub7CYrA.png
@@ -11,6 +11,7 @@
       Unlock the 15 Gates to access Tourian and defeat Mother Brain
       Level design modified to prevent morph locks and increase item variety
       Walljumping is required
+      Tourian Item may only be obtained before Baby Metroid trigger
      
       
 #### Casual Difficulty
@@ -34,6 +35,7 @@
       Different algorithm for increased randomization
       Decreased frequency of Energy Tanks
       IBJ, midair springball jump, and other advanced techniques are required
+      
 ----------------------------------------------  
 
 An Item Randomizer program for the Super Metroid Romhack called Hyper Metroid.  
@@ -51,14 +53,14 @@ It's a fork from Dessy's original Super Metroid Randomizer program, that can be 
 ## Hyper Metroid Item Randomizer Changelog
 ##### For more information on gameplay changes from the original Super Metroid [check it out here](http://www.begrimed.com/pb/pb_info.html)
 
-v 1.1 Pending Release
+v 1.10 
 
     Veteran Difficulty has been added.
     Casual Difficulty - Adjusted Energy Tank frequency.
     Fixed a bug where collecting Morphing Ball would sometimes give Spring Ball instead.
         
     
-v 1.0
+v 1.00
 
     Public.
     Casual Difficulty has been added.
