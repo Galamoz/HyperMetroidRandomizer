@@ -2,12 +2,38 @@
 # Downloads: [Hyper Metroid Item Randomizer v1.00](https://github.com/Galamoz/HyperMetroidRandomizer/releases/download/1.00/Hyper.Metroid.Item.Randomizer.v1.00.exe)
 
 #### Hyper Metroid Randomizer Resources
-##### Hints on all 15 gate locations: https://imgur.com/a/bRfEg3Y
-##### Hints on all 100 item locations: https://imgur.com/a/lIe2aKs
-##### Quick full game map reference: https://imgur.com/a/Mkz04sQ
+##### Full game map reference with item names: https://i.imgur.com/ub7CYrA.png
 
-###### Important technique to know for Hyper Metroid randomizers is: Angle Down (L by default) + Down while midair to instant morphball.
+###### Important technique to know for Hyper Metroid randomizers: Angle Down (L by default) + Down while midair to instant morphball.
 
+#### Rules:
+
+      Unlock the 15 Gates to access Tourian and defeat Mother Brain
+      Level design modified to prevent morph locks and increase item variety
+      Walljumping is required
+     
+      
+#### Casual Difficulty
+
+      All 100 Items are included
+      Varia Suit does not spawn in Norfair / Lower Norfair
+      Gravity Suit does not spawn in Maridia / Maridia Depths / Wrecked Ship (past Phantoon)
+      Morphing Ball may only spawn in Crateria
+      Better distribution on Energy Tanks to assist casual play
+      Infinite Bomb Jump is not required (more frequent early space jump spawns)
+
+#### Veteran Difficulty
+
+      All 100 Items are included
+      Experimental Difficulty:
+            Gravity Suit may spawn wherever possible
+            Varia Suit may not spawn in Lower Nofair
+            Certain item combinations for hellruns / gravity suit hellruns may not be possible.
+            Certain deep suitless underwater sections may not be possible without High Jump Boots and Springball.
+            Morphing Ball may spawn in both Norfair and Crateria.
+      Different algorithm for increased randomization
+      Decreased frequency of Energy Tanks
+      IBJ, midair springball jump, and other advanced techniques are required
 ----------------------------------------------  
 
 An Item Randomizer program for the Super Metroid Romhack called Hyper Metroid.  
@@ -27,7 +53,10 @@ It's a fork from Dessy's original Super Metroid Randomizer program, that can be 
 
 v 1.1 Pending Release
 
-    ...
+    Veteran Difficulty has been added.
+    Casual Difficulty - Adjusted Energy Tank frequency.
+    Fixed a bug where collecting Morphing Ball would sometimes give Spring Ball instead.
+        
     
 v 1.0
 
