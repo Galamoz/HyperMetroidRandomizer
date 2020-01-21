@@ -11,7 +11,7 @@
       Unlock the 15 Gates to access Tourian and defeat Mother Brain
       Level design modified to prevent morph locks and increase item variety
       Walljumping is required
-      Tourian Item may only be obtained before Baby Metroid trigger
+      Tourian Item may only be obtained after Baby Metroid trigger
      
       
 #### Casual Difficulty
